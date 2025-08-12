@@ -1,0 +1,91 @@
+version: '3.8'
+
+services:
+  leantime:
+    image: leantime/leantime:latest
+    restart: unless-stopped
+    environment:
+      LEAN_APP_URL: '${APP_URL:-https://leantime.example.com}'
+      LEAN_APP_DIR: '/var/www/html'
+      LEAN_DEBUG: '${LEAN_DEBUG:-0}'
+      
+      # Database Configuration
+      LEAN_DB_HOST: 'mysql'
+      LEAN_DB_DATABASE: '${MYSQL_DATABASE:-leantime}'
+      LEAN_DB_USER: '${MYSQL_USER:-leantime}'
+      LEAN_DB_PASSWORD: '${MYSQL_PASSWORD:-changeme123}'
+      
+      # Session & Security
+      LEAN_SESSION_PASSWORD: '${LEAN_SESSION_PASSWORD:-GWE43JIOPGEW8u902384i0gjwe8p}'
+      LEAN_SESSION_EXPIRATION: '${LEAN_SESSION_EXPIRATION:-28800}'
+      
+      # Email Configuration (optional)
+      LEAN_EMAIL_RETURN: '${LEAN_EMAIL_RETURN:-hello@example.com}'
+      LEAN_EMAIL_USE_SMTP: '${LEAN_EMAIL_USE_SMTP:-false}'
+      LEAN_EMAIL_SMTP_HOSTS: '${LEAN_EMAIL_SMTP_HOSTS:-}'
+      LEAN_EMAIL_SMTP_USERNAME: '${LEAN_EMAIL_SMTP_USERNAME:-}'
+      LEAN_EMAIL_SMTP_PASSWORD: '${LEAN_EMAIL_SMTP_PASSWORD:-}'
+      LEAN_EMAIL_SMTP_PORT: '${LEAN_EMAIL_SMTP_PORT:-587}'
+      LEAN_EMAIL_SMTP_SECURE: '${LEAN_EMAIL_SMTP_SECURE:-tls}'
+      LEAN_EMAIL_SMTP_AUTO_TLS: '${LEAN_EMAIL_SMTP_AUTO_TLS:-true}'
+      
+      # S3 Configuration (optional)
+      LEAN_USE_S3: '${LEAN_USE_S3:-false}'
+      LEAN_S3_BUCKET: '${LEAN_S3_BUCKET:-}'
+      LEAN_S3_REGION: '${LEAN_S3_REGION:-}'
+      LEAN_S3_KEY: '${LEAN_S3_KEY:-}'
+      LEAN_S3_SECRET: '${LEAN_S3_SECRET:-}'
+      
+      # OIDC Configuration (optional)
+      LEAN_OIDC_ENABLE: '${LEAN_OIDC_ENABLE:-false}'
+      LEAN_OIDC_CLIENT_ID: '${LEAN_OIDC_CLIENT_ID:-}'
+      LEAN_OIDC_CLIENT_SECRET: '${LEAN_OIDC_CLIENT_SECRET:-}'
+      
+      # Default Timezone
+      LEAN_DEFAULT_TIMEZONE: '${LEAN_DEFAULT_TIMEZONE:-America/New_York}'
+      
+    volumes:
+      - leantime_public_userfiles:/var/www/html/public/userfiles
+      - leantime_userfiles:/var/www/html/userfiles
+      - leantime_plugins:/var/www/html/app/Plugins
+    depends_on:
+      - mysql
+    networks:
+      - leantime-network
+    # NO PORTS EXPOSED - Coolify proxy handles this
+    expose:
+      - "80"  # Internal exposure only for Coolify proxy
+
+  mysql:
+    image: mysql:8.0
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: '${MYSQL_ROOT_PASSWORD:-changeme123}'
+      MYSQL_DATABASE: '${MYSQL_DATABASE:-leantime}'
+      MYSQL_USER: '${MYSQL_USER:-leantime}'
+      MYSQL_PASSWORD: '${MYSQL_PASSWORD:-changeme123}'
+    volumes:
+      - mysql_data:/var/lib/mysql
+    command: [
+      '--character-set-server=utf8mb4',
+      '--collation-server=utf8mb4_unicode_ci',
+      '--default-authentication-plugin=mysql_native_password'
+    ]
+    networks:
+      - leantime-network
+    # NO PORTS EXPOSED - Internal only
+
+volumes:
+  mysql_data:
+    driver: local
+  leantime_public_userfiles:
+    driver: local
+  leantime_userfiles:
+    driver: local
+  leantime_plugins:
+    driver: local
+
+networks:
+  leantime-network:
+    driver: bridge
+    internal: false  # Allow external access through Coolify proxy

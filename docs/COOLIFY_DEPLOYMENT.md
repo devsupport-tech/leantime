@@ -22,7 +22,8 @@ This guide covers deploying Leantime on Coolify using Docker Compose.
    - **Git Repository** (recommended): Point to your Leantime fork/repo
    - **Direct Docker Compose**: Paste the docker-compose.yml content directly
 
-2. **Docker Compose File**: Use `docker-compose.coolify.yml` or paste its contents
+2. **Docker Compose File**: Use `docker-compose.coolify-internal.yml` (recommended) or `docker-compose.coolify.yml`
+   - If you get port 80 conflicts, use `docker-compose.coolify-internal.yml`
 
 3. **Build Pack**: Select "Docker Compose"
 
@@ -162,6 +163,11 @@ Access logs through Coolify:
 3. Select container (leantime or mysql)
 
 ## Troubleshooting
+
+### Port 80 Already Allocated Error
+- Use `docker-compose.coolify-internal.yml` instead of the standard one
+- This version uses `expose` instead of `ports` for internal-only access
+- Coolify's proxy will handle external traffic routing
 
 ### Container Won't Start
 - Check environment variables are set correctly
