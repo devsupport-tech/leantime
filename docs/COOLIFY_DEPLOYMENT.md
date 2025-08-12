@@ -31,7 +31,7 @@ This guide covers deploying Leantime on Coolify using Docker Compose.
 In Coolify's environment variables section, add these required variables:
 
 ```bash
-# Required
+# Required - MUST CHANGE THESE!
 APP_URL=https://your-domain.com
 MYSQL_ROOT_PASSWORD=<generate-strong-password>
 MYSQL_PASSWORD=<generate-strong-password>
@@ -41,6 +41,8 @@ LEAN_SESSION_PASSWORD=<generate-32-char-string>
 LEAN_EMAIL_RETURN=admin@your-domain.com
 LEAN_DEFAULT_TIMEZONE=America/New_York
 ```
+
+**Important**: The docker-compose file includes default passwords for testing, but you MUST override these with secure passwords in Coolify's environment variables for production use!
 
 ### 4. Configure Networking
 

@@ -13,10 +13,10 @@ services:
       LEAN_DB_HOST: 'mysql'
       LEAN_DB_DATABASE: '${MYSQL_DATABASE:-leantime}'
       LEAN_DB_USER: '${MYSQL_USER:-leantime}'
-      LEAN_DB_PASSWORD: '${MYSQL_PASSWORD}'
+      LEAN_DB_PASSWORD: '${MYSQL_PASSWORD:-changeme123}'
       
       # Session & Security
-      LEAN_SESSION_PASSWORD: '${LEAN_SESSION_PASSWORD}'
+      LEAN_SESSION_PASSWORD: '${LEAN_SESSION_PASSWORD:-GWE43JIOPGEW8u902384i0gjwe8p}'
       LEAN_SESSION_EXPIRATION: '${LEAN_SESSION_EXPIRATION:-28800}'
       
       # Email Configuration (optional)
@@ -59,10 +59,10 @@ services:
     image: mysql:8.0
     restart: unless-stopped
     environment:
-      MYSQL_ROOT_PASSWORD: '${MYSQL_ROOT_PASSWORD}'
+      MYSQL_ROOT_PASSWORD: '${MYSQL_ROOT_PASSWORD:-changeme123}'
       MYSQL_DATABASE: '${MYSQL_DATABASE:-leantime}'
       MYSQL_USER: '${MYSQL_USER:-leantime}'
-      MYSQL_PASSWORD: '${MYSQL_PASSWORD}'
+      MYSQL_PASSWORD: '${MYSQL_PASSWORD:-changeme123}'
     volumes:
       - mysql_data:/var/lib/mysql
     command: [
