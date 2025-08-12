@@ -77,7 +77,7 @@ make phpstan
 # Run code style checks
 make test-code-style
 
-# Fix code style issues
+# Fix code style issues  
 make fix-code-style
 
 # Run unit tests
@@ -86,12 +86,25 @@ make unit-test
 # Run acceptance tests
 make acceptance-test
 
+# Run API tests only
+make api-test
+
 # Run specific acceptance test groups
 # For API tests:
 docker compose --file .dev/docker-compose.yaml --file .dev/docker-compose.tests.yaml exec leantime-dev php vendor/bin/codecept run -g api --steps
 
 # For timesheet tests:
 docker compose --file .dev/docker-compose.yaml --file .dev/docker-compose.tests.yaml exec leantime-dev php vendor/bin/codecept run -g timesheet --steps
+
+# Run a single test file
+docker compose --file .dev/docker-compose.yaml --file .dev/docker-compose.tests.yaml exec leantime-dev php vendor/bin/codecept run Acceptance tests/Acceptance/LoginCest.php
+
+# Run tests with coverage
+docker compose --file .dev/docker-compose.yaml --file .dev/docker-compose.tests.yaml exec leantime-dev php vendor/bin/codecept run --coverage
+
+# Clean and rebuild test environment
+docker compose --file .dev/docker-compose.yaml --file .dev/docker-compose.tests.yaml exec leantime-dev php vendor/bin/codecept clean
+docker compose --file .dev/docker-compose.yaml --file .dev/docker-compose.tests.yaml exec leantime-dev php vendor/bin/codecept build
 ```
 
 ### CLI Commands
@@ -422,8 +435,8 @@ When handling user requests, follow this priority order:
 - Follow existing patterns for lazy loading and caching
 - Use htmx for information updates and reloads, use javascript for interactivity
 
-#### CachingW
-- Leantimne uses the Laravel cache either file based or redis. 
+#### Caching
+- Leantime uses the Laravel cache either file based or redis. 
 - Cache should be used wherever expensive operations are happening. 
 
 ## Development Practices
@@ -549,4 +562,24 @@ We have a DateTimeHelper class to parse commone datetime formats we find, the da
 - Controllers should only call services NOT repositories. If a repo call is detected it should be refactored.
 - Services can call repositories
 - Be careful when calling domain services in other domain services as circular references can happen
-- Services should validated input and throw exceptions when validation fails
+- Services should validate input and throw exceptions when validation fails
+
+## Quick Development Workflow
+
+### Making Changes to a Domain
+1. Find the domain in `app/Domain/[DomainName]/`
+2. Modify the appropriate layer (Controller, Service, Repository)
+3. If adding HTMX endpoints, place them in `Hxcontrollers/`
+4. Run `make fix-code-style` to ensure code style compliance
+5. Test your changes: `make unit-test` or domain-specific tests
+
+### Working with Plugins
+1. Create plugin folder in `app/Plugins/[PluginName]/`
+2. Add `composer.json` with plugin metadata
+3. Create `register.php` for bootstrapping
+4. Follow same domain structure as core domains
+5. Register event listeners and filters in `register.php`
+6. Enable plugin: `php bin/leantime plugin:enable [PluginName]`
+
+### Database Migrations
+Currently manual - add SQL changes to update scripts. Doctrine ORM integration is planned which will enable proper migrations.
