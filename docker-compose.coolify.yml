@@ -52,8 +52,8 @@ services:
       - mysql
     networks:
       - leantime-network
-    ports:
-      - "${APP_PORT:-80}:80"
+    # Coolify handles port exposure through its proxy
+    # No need to expose ports directly
 
   mysql:
     image: mysql:8.0

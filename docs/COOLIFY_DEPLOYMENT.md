@@ -50,8 +50,9 @@ LEAN_DEFAULT_TIMEZONE=America/New_York
    - Coolify will automatically handle Let's Encrypt SSL
 
 2. **Port Configuration**:
-   - Expose port 80 (or custom port via APP_PORT)
-   - Coolify will proxy this through its reverse proxy
+   - Coolify automatically handles port routing through its proxy
+   - No need to expose ports in docker-compose.yml
+   - The application runs on port 80 internally
 
 ### 5. Storage Configuration
 
