@@ -174,10 +174,13 @@ Access logs through Coolify:
 - Verify MySQL password matches in both services
 - Check Coolify logs for errors
 
-### Can't Access Application
+### Can't Access Application / "No Server Available"
 - Verify domain DNS points to Coolify server
 - Check SSL certificate status in Coolify
 - Ensure port 80/443 are open in firewall
+- In Coolify, ensure the domain is properly configured in the application settings
+- Check that the application is marked as "exposed" in Coolify
+- Verify Coolify's proxy (Traefik) is running correctly
 
 ### Database Connection Issues
 - Verify LEAN_DB_HOST is set to 'mysql'

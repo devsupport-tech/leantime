@@ -62,6 +62,10 @@ services:
     # NO PORTS EXPOSED - Coolify proxy handles this
     expose:
       - "80"  # Internal exposure only for Coolify proxy
+    labels:
+      - "coolify.managed=true"
+      - "traefik.enable=true"
+      - "traefik.http.services.leantime.loadbalancer.server.port=80"
 
   mysql:
     image: mysql:8.0
