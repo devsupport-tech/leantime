@@ -22,8 +22,10 @@ This guide covers deploying Leantime on Coolify using Docker Compose.
    - **Git Repository** (recommended): Point to your Leantime fork/repo
    - **Direct Docker Compose**: Paste the docker-compose.yml content directly
 
-2. **Docker Compose File**: Use `docker-compose.coolify-internal.yml` (recommended) or `docker-compose.coolify.yml`
-   - If you get port 80 conflicts, use `docker-compose.coolify-internal.yml`
+2. **Docker Compose File**: Choose the appropriate version:
+   - `docker-compose.coolify-simple.yml` - Simplest configuration, let Coolify handle all networking
+   - `docker-compose.coolify-internal.yml` - With health checks and labels
+   - `docker-compose.coolify.yml` - Original version
 
 3. **Build Pack**: Select "Docker Compose"
 
@@ -175,12 +177,21 @@ Access logs through Coolify:
 - Check Coolify logs for errors
 
 ### Can't Access Application / "No Server Available"
-- Verify domain DNS points to Coolify server
+
+**In Coolify Dashboard:**
+1. Go to your application settings
+2. Click on "Domains" tab
+3. Add your domain (e.g., `https://leantime.yourdomain.com`)
+4. Click "Generate Domain"
+5. Ensure SSL is enabled
+6. Save and redeploy
+
+**Also check:**
+- Verify domain DNS points to Coolify server IP
 - Check SSL certificate status in Coolify
 - Ensure port 80/443 are open in firewall
-- In Coolify, ensure the domain is properly configured in the application settings
-- Check that the application is marked as "exposed" in Coolify
-- Verify Coolify's proxy (Traefik) is running correctly
+- Try using `docker-compose.coolify-simple.yml` for minimal configuration
+- Check Coolify's proxy container is running: `docker ps | grep coolify-proxy`
 
 ### Database Connection Issues
 - Verify LEAN_DB_HOST is set to 'mysql'
